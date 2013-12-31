@@ -198,5 +198,59 @@ class GameSpec extends FunSpec with ShouldMatchers {
           """.stripMargin.trim)
       }
     }
+
+    describe("flipping multiple cards at once") {
+      val game = GameUtil.parseGame(
+        """
+          |EMPTY{_},R1234{_},EMPTY{_}
+          |R1234{_},EMPTY{_},R1234{_}
+          |EMPTY{_},R1234{_},EMPTY{_}
+        """.stripMargin.trim)
+
+      it("should flip card on right and below with one card") {
+        game.playCard(Card(1,1,3,2), 0, 0).board.toString should be(
+          """
+            |B1132{_},B1234{_},EMPTY{_}
+            |B1234{_},EMPTY{_},R1234{_}
+            |EMPTY{_},R1234{_},EMPTY{_}
+          """.stripMargin.trim)
+      }
+
+      it("should flip card on left and below with one card") {
+        game.playCard(Card(1,4,1,2), 0, 2).board.toString should be(
+          """
+            |EMPTY{_},B1234{_},B1412{_}
+            |R1234{_},EMPTY{_},B1234{_}
+            |EMPTY{_},R1234{_},EMPTY{_}
+          """.stripMargin.trim)
+      }
+
+      it("should flip card above, below, left and right with one card") {
+        game.playCard(Card(5,5,5,5), 1, 1).board.toString should be(
+          """
+            |EMPTY{_},B1234{_},EMPTY{_}
+            |B1234{_},B5555{_},B1234{_}
+            |EMPTY{_},B1234{_},EMPTY{_}
+          """.stripMargin.trim)
+      }
+
+      it("should flip card right & above with one card") {
+        game.playCard(Card(5,4,3,2), 2, 0).board.toString should be(
+          """
+            |EMPTY{_},R1234{_},EMPTY{_}
+            |B1234{_},EMPTY{_},R1234{_}
+            |B5432{_},B1234{_},EMPTY{_}
+          """.stripMargin.trim)
+      }
+
+      it("should flip card left & above with one card") {
+        game.playCard(Card(5,4,3,2), 2, 2).board.toString should be(
+          """
+            |EMPTY{_},R1234{_},EMPTY{_}
+            |R1234{_},EMPTY{_},B1234{_}
+            |EMPTY{_},B1234{_},B5432{_}
+          """.stripMargin.trim)
+      }
+    }
   }
 }
