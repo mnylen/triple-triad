@@ -177,5 +177,26 @@ class GameSpec extends FunSpec with ShouldMatchers {
           """.stripMargin.trim)
       }
     }
+
+    describe("placing cards next to own cards") {
+      it("should not flip own cards") {
+        val B5322 = Card(5,3,2,2)
+
+        val game = GameUtil.parseGame(
+          """
+            |EMPTY{_},B1234{_},EMPTY{_}
+            |R4321{_},EMPTY{_},EMPTY{_}
+            |EMPTY{_},EMPTY{_},EMPTY{_}
+          """.stripMargin.trim)
+
+        val updated = game.playCard(B5322 ,1, 1)
+        updated.board.toString should be(
+          """
+            |EMPTY{_},B1234{_},EMPTY{_}
+            |B4321{_},B5322{_},EMPTY{_}
+            |EMPTY{_},EMPTY{_},EMPTY{_}
+          """.stripMargin.trim)
+      }
+    }
   }
 }
