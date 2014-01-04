@@ -23,7 +23,7 @@ object GameUtil {
     }.flatten
 
     val board = Board(parsedCells.toList)
-    val game = Game(board, Player.Blue, Hand.empty, Hand.empty)
+    val game = Game(board, Player.Blue, Hand.empty, Hand.empty, Set.empty)
 
     game
   }

@@ -12,8 +12,12 @@ object Player extends Enumeration {
 
 object Element extends Enumeration {
   val Fire = Value("F")
-  val Lightning = Value("L")
-  val Aero = Value("A")
+  val Thunder = Value("T")
+  val Earth = Value("E")
+  val Wind = Value("W")
+  val Water = Value("O")
+  val Poison = Value("P")
+  val Ice = Value("I")
   val None = Value("_")
 
   def forSymbol(symbol: Char) = {
@@ -25,7 +29,13 @@ object Element extends Enumeration {
 object Direction extends Enumeration {
   val Left = Value("left")
   val Right = Value("right")
-  val Bottom = Value("bottom2")
-  val Top = Value("right")
+  val Bottom = Value("bottom")
+  val Top = Value("top")
+}
+
+object Rule extends Enumeration {
+  val Same = Value("same")
+  val Elemental = Value("elemental")
+  val Plus = Value("plus")
 }
 

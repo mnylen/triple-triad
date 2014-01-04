@@ -253,4 +253,87 @@ class GameSpec extends FunSpec with ShouldMatchers {
       }
     }
   }
+
+  describe("plus rule") {
+    it("works in basic case") {
+      val game = GameUtil.parseGame(
+        """
+          |EMPTY{_},R2683{_},EMPTY{_}
+          |R4257{_},EMPTY{_},EMPTY{_}
+          |EMPTY{_},EMPTY{_},EMPTY{_}
+        """.stripMargin.trim).copy(rules = Set(Rule.Plus))
+
+      game.playCard(Card(4,2,6,2), 1, 1).board.toString should be(
+        """
+          |EMPTY{_},B2683{_},EMPTY{_}
+          |B4257{_},B4262{_},EMPTY{_}
+          |EMPTY{_},EMPTY{_},EMPTY{_}
+        """.stripMargin.trim)
+    }
+
+    it("works with combo") {
+      val game = GameUtil.parseGame(
+        """
+          |R1111{_},R2683{_},EMPTY{_}
+          |R4257{_},EMPTY{_},EMPTY{_}
+          |EMPTY{_},EMPTY{_},EMPTY{_}
+        """.stripMargin.trim).copy(rules = Set(Rule.Plus))
+
+      game.playCard(Card(4,2,6,2), 1, 1).board.toString should be(
+        """
+          |B1111{_},B2683{_},EMPTY{_}
+          |B4257{_},B4262{_},EMPTY{_}
+          |EMPTY{_},EMPTY{_},EMPTY{_}
+        """.stripMargin.trim)
+    }
+
+    it("works with three-card case") {
+      val game = GameUtil.parseGame(
+        """
+          |EMPTY{_},R2683{_},EMPTY{_}
+          |R4257{_},EMPTY{_},R2134{_}
+          |EMPTY{_},EMPTY{_},EMPTY{_}
+        """.stripMargin.trim).copy(rules = Set(Rule.Plus))
+
+      game.playCard(Card(4,2,6,2), 1, 1).board.toString should be(
+        """
+          |EMPTY{_},B2683{_},EMPTY{_}
+          |B4257{_},B4262{_},B2134{_}
+          |EMPTY{_},EMPTY{_},EMPTY{_}
+        """.stripMargin.trim)
+    }
+
+    it("works when one of the other cards is your own") {
+      val game = GameUtil.parseGame(
+        """
+          |EMPTY{_},EMPTY{_},B1787{_}
+          |EMPTY{_},R8485{_},EMPTY{_}
+          |EMPTY{_},EMPTY{_},EMPTY{_}
+        """.stripMargin.trim).copy(rules = Set(Rule.Plus))
+
+      game.playCard(Card(6,5,5,6), 1, 2).board.toString should be(
+        """
+          |EMPTY{_},EMPTY{_},B1787{_}
+          |EMPTY{_},B8485{_},B6556{_}
+          |EMPTY{_},EMPTY{_},EMPTY{_}
+        """.stripMargin.trim
+      )
+    }
+
+    it("works when only two sides have a matching sum") {
+      val game = GameUtil.parseGame(
+        """
+          |EMPTY{_},R7354{_},R5325{_}
+          |EMPTY{_},R1154{_},EMPTY{_}
+          |EMPTY{_},EMPTY{_},R1111{_}
+        """.stripMargin.trim).copy(rules = Set(Rule.Plus))
+
+      game.playCard(Card(5,5,1,1), 1, 2).board.toString should be(
+        """
+          |EMPTY{_},R7354{_},B5325{_}
+          |EMPTY{_},B1154{_},B5511{_}
+          |EMPTY{_},EMPTY{_},B1111{_}
+        """.stripMargin.trim)
+    }
+  }
 }

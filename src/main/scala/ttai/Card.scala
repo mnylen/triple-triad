@@ -18,7 +18,15 @@ case class Card(rankTop: Int, rankLeft: Int, rankRight: Int, rankBottom: Int, el
   }
 
   override def toString = {
-    s"$rankTop$rankLeft$rankRight$rankBottom{$element}"
+    def rankToStr(rank: Int) = {
+      if (rank == 10) {
+        "A"
+      } else {
+        rank.toString
+      }
+    }
+
+    Seq(rankTop, rankLeft, rankRight, rankBottom).map(rankToStr).mkString("") + s"{$element}"
   }
 }
 

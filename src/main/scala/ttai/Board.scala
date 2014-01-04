@@ -1,5 +1,16 @@
 package ttai
 
+import ttai.Direction._
+
+object Board {
+  lazy val empty = Board(
+    (for {
+      row <- (0 until 3)
+      col <- (0 until 3)
+    } yield Cell(None, row, col, Element.None)).toList
+  )
+}
+
 case class Board(cells: List[Cell]) {
   def apply(row: Int, col: Int) = {
     get(row, col).getOrElse(throw new NoSuchElementException(s"No cell found from index ($row, $col)"))
@@ -12,6 +23,14 @@ case class Board(cells: List[Cell]) {
       val index = row * 3 + col
       Some(cells(index))
     }
+  }
+
+  def getRelative(row: Int, col: Int)(dir: Direction.Value) = dir match {
+    case Top    => get(row-1, col)
+    case Bottom => get(row+1, col)
+    case Left   => get(row, col-1)
+    case Right  => get(row, col+1)
+    case _      => None
   }
 
   def replaceCell(updated: Cell) = {
@@ -35,8 +54,7 @@ case class CardWithOwner(card: Card, owner: Player.Value) {
   override def toString = s"$owner$card"
 }
 
-case class Cell(card: Option[CardWithOwner], row: Int, col: Int) {
-  // TODO: cell might have an element too
+case class Cell(card: Option[CardWithOwner], row: Int, col: Int, element: Element.Value = Element.None) {
   def placeCard(card: Card, owner: Player.Value) =
     copy(card = Some(CardWithOwner(card, owner)))
 
@@ -51,8 +69,14 @@ case class Cell(card: Option[CardWithOwner], row: Int, col: Int) {
     }
   }
 
+  def isEmpty = card.isEmpty
+
+  def isOwnedBy(player: Player.Value) = {
+    !isEmpty && card.get.owner == player
+  }
+
   override def toString = card match {
     case Some(card) => card.toString
-    case None       => "EMPTY{_}"
+    case None       => "EMPTY{" + element + "}"
   }
 }
