@@ -3,7 +3,7 @@ package ttai
 object Ai {
   def getNextMove(game: Game) = {
     val freeCellsLeft = game.board.cells.count(_.isEmpty)
-    val maxDepth = if (freeCellsLeft == 9) 4 else if (freeCellsLeft == 8) 5 else freeCellsLeft
+    val maxDepth = if (freeCellsLeft == 9) 5 else if (freeCellsLeft == 8) 5 else freeCellsLeft
     val (_, move) = negamax(game, maxDepth)
     move
   }
